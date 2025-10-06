@@ -1,0 +1,68 @@
+@startuml diagrama-classe
+abstract class Usuario implements ServicoAutenticacao{
+    - nome
+    # void login ()
+    # void logout ()
+}
+
+class Cliente extends Usuario {
+    - nome
+    - enderecos
+}
+
+class Administrador  extends Usuario {
+
+}
+
+class Entregador extends Usuario {
+
+}
+
+class Restaurante {
+    +  nome
+    +  enderecos
+    +  cnpj
+
+}
+
+class Entrega {
+    + status
+
+    atualizarStatus()
+}
+
+class Notificacao {
+    notificaPedido()
+}
+
+class Menu {
+    + comidas
+    + bebidas
+    + promocoes
+}
+
+Interface ServicoAutenticacao {
+    # void cadastrarUsuario()
+    # void deletarUsuario()
+}
+
+class Carrinho {
+    - produtos
+    - valor_total
+}
+
+class Pagamento {
+    pagamentoOnline()
+    pagamentoEntrega()
+}
+
+Cliente "1" -- "1" Carrinho
+Administrador "1" -- "1..*" Restaurante
+Entregador "1..*" -- "1..*" Restaurante
+Restaurante "1" -- "1" Menu
+Restaurante -- Entrega
+Entregador "0..*"--"1..*" Entrega
+Cliente -- Entrega
+Notificacao -- Entregador
+Notificacao -- Cliente
+Cliente -- Pagamento

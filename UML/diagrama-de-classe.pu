@@ -1,0 +1,27 @@
+@startuml diagrama-de-classe
+
+abstract class Espaco {
+    - Int capacidade
+    - Double preco
+    - String descricao
+
+    + Int getCapacidade()
+    + Double getPreco()
+    + String getDescricao()
+    + String setCapacidade()
+    + Double setPreco()
+    + String setDescricao()
+}
+
+class Reserva {
+    - Espaco espaco
+    - Date dataInicial
+    - Date dataFinal
+    - Boolean reservado
+
+    Espaco getEspaco()
+    Date getDataInicial()
+    Date getDataFinal()
+    Boolean getReservado()
+
+}
