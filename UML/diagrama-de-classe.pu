@@ -19,9 +19,56 @@ class Reserva {
     - Date dataFinal
     - Boolean reservado
 
-    Espaco getEspaco()
-    Date getDataInicial()
-    Date getDataFinal()
-    Boolean getReservado()
+    + Espaco getEspaco()
+    + Date getDataInicial()
+    + Date getDataFinal()
+    + Boolean getReservado()
+
+    + void reservarEspaco()
+    + void cancelarReserva()
+    + void verReserva()
+
 
 }
+
+interface Pagamento {
+
+}
+
+class PagamentoCartao {
+
+}
+
+class PagamentoDinheiro {
+
+}
+
+interface Usuario {
+    - nome
+    - email
+    - senha
+
+
+}
+
+class Cliente {
+
+}
+
+class Admin {
+
+    # void cancelarReserva()
+
+}
+
+
+Reserva *-- Espaco
+Pagamento <|.. PagamentoCartao
+Pagamento <|.. PagamentoDinheiro
+
+Usuario <|.. Cliente
+Usuario <|.. Admin
+
+Reserva "0..*".."1" Cliente
+
+Cliente .. Pagamento
