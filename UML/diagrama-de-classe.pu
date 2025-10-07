@@ -1,74 +1,110 @@
 @startuml diagrama-de-classe
 
-abstract class Espaco {
+class Espaco {
+    - String localizacao
+    - String tipo
+    - String descricao
     - Int capacidade
     - Double preco
-    - String descricao
+    - Fotos fotos
 
-    + Int getCapacidade()
-    + Double getPreco()
-    + String getDescricao()
-    + String setCapacidade()
-    + Double setPreco()
-    + String setDescricao()
+    + geters()
+    + seters()
+}
+
+class GerenciamentoEspaco {
+    + cadastrarEspaco()
+    + atualizarEspaco()
+    + deletarEspaco()
 }
 
 class Reserva {
     - Espaco espaco
     - Date dataInicial
     - Date dataFinal
-    - Boolean reservado
+    - Int CPFReserva
 
-    + Espaco getEspaco()
-    + Date getDataInicial()
-    + Date getDataFinal()
-    + Boolean getReservado()
+    + geters()
+    + seters()
 
     + void reservarEspaco()
     + void cancelarReserva()
     + void verReserva()
-
-
+    + void verEspacosVagos()
+    + List<Espaco> EspacosFiltro()
 }
+note top of Reserva
+    CPFReserva foregni key para Espaço
+    <b>EspacosFiltro:
+    func generica para "buscar por preço
+    buscar por localização, tipo, etc..."
+end note
 
 interface Pagamento {
 
 }
 
-class PagamentoCartao {
+class PagamentoCartao extends Pagamento{
 
 }
 
-class PagamentoDinheiro {
+class PagamentoDinheiro extends Pagamento{
 
 }
+
+class ControlePagamento {
+    + void validarPagamento()
+    + void confirmarPagament()
+    + void cancelarPagamento()
+    + void lockReserva()
+    + void unlockReserva()
+}
+
+note right of ControlePagamento
+    "Verificar se  possui apenas
+    sinal pago ou se já está quitada"
+end note
+
+note left of ControlePagamento #Red
+    Deveria estar aqui? ou
+    ligando PagamentoDinheiro e
+    Pagamento cartão?
+end note
+
+note top of ControlePagamento #Red
+    Fazer lock do espaço aqui
+    Até confirmação do pagamento?
+end note
 
 interface Usuario {
     - nome
     - email
     - senha
+    - CPF
+}
 
+class Cliente extends Usuario{
 
 }
 
-class Cliente {
-
-}
-
-class Admin {
-
+class Admin extends Usuario{
     # void cancelarReserva()
-
+    # void administrarUsuarios()
 }
+
+
 
 
 Reserva *-- Espaco
-Pagamento <|.. PagamentoCartao
-Pagamento <|.. PagamentoDinheiro
+Reserva -- ControlePagamento
+PagamentoDinheiro .. Cliente
+PagamentoCartao .. Cliente
 
-Usuario <|.. Cliente
-Usuario <|.. Admin
+ControlePagamento .. Pagamento
 
-Reserva "0..*".."1" Cliente
+Espaco <.. GerenciamentoEspaco :gerencia
+Admin ..> GerenciamentoEspaco :administra
 
-Cliente .. Pagamento
+
+Reserva "0..1".."1" Cliente
+@enduml
