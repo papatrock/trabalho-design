@@ -10,9 +10,7 @@ class Espaco {
 
     + geters()
     + seters()
-}
 
-class GerenciamentoEspaco {
     + cadastrarEspaco()
     + atualizarEspaco()
     + deletarEspaco()
@@ -33,12 +31,6 @@ class Reserva {
     + void verEspacosVagos()
     + List<Espaco> EspacosFiltro()
 }
-note top of Reserva
-    CPFReserva foregni key para Espaço
-    <b>EspacosFiltro:
-    func generica para "buscar por preço
-    buscar por localização, tipo, etc..."
-end note
 
 interface Pagamento {
 
@@ -100,10 +92,12 @@ Reserva -- ControlePagamento
 PagamentoDinheiro .. Cliente
 PagamentoCartao .. Cliente
 
-ControlePagamento .. Pagamento
+ControlePagamento .. PagamentoDinheiro
+ControlePagamento .. PagamentoCartao
 
-Espaco <.. GerenciamentoEspaco :gerencia
-Admin ..> GerenciamentoEspaco :administra
+Admin ..> Espaco :administra
+Admin ..> Reserva :administra
+Admin ..> ControlePagamento :administra
 
 
 Reserva "0..1".."1" Cliente

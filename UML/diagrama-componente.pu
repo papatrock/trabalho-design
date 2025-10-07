@@ -1,0 +1,29 @@
+@startuml componentes
+package "Front End" {
+    [Pagina de Reservas]
+    [Dashboard]
+
+    HTTP - [Example]
+}
+
+package "Gateway?" {
+    [lalalal]
+}
+
+package "Back End" {
+
+    [ControlePagamento]
+    [Reserva]
+    [Pagamento]
+
+}
+
+
+package "Autenticação" {
+    [Autenticacao]
+}
+
+database "Postgres" {
+
+}
+@enduml
