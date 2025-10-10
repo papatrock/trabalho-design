@@ -10,10 +10,13 @@ class Espaco {
 
     + geters()
     + seters()
+}
 
+class EspacoControle {
     + cadastrarEspaco()
     + atualizarEspaco()
     + deletarEspaco()
+
 }
 
 class Reserva {
@@ -25,6 +28,9 @@ class Reserva {
     + geters()
     + seters()
 
+}
+
+class ReservaControle {
     + void reservarEspaco()
     + void cancelarReserva()
     + void verReserva()
@@ -36,15 +42,15 @@ interface Pagamento {
 
 }
 
-class PagamentoCartao extends Pagamento{
+class PagamentoCartao implements Pagamento{
 
 }
 
-class PagamentoDinheiro extends Pagamento{
+class PagamentoDinheiro implements Pagamento{
 
 }
 
-class ControlePagamento {
+class PagamentoControle {
     + void validarPagamento()
     + void confirmarPagament()
     + void cancelarPagamento()
@@ -52,31 +58,36 @@ class ControlePagamento {
     + void unlockReserva()
 }
 
-note right of ControlePagamento
-    "Verificar se  possui apenas
-    sinal pago ou se já está quitada"
-end note
-
-note left of ControlePagamento #Red
-    Deveria estar aqui? ou
-    ligando PagamentoDinheiro e
-    Pagamento cartão?
-end note
-
-note top of ControlePagamento #Red
+note top of PagamentoControle #Red
     Fazer lock do espaço aqui
     Até confirmação do pagamento?
 end note
 
-interface Usuario {
+note right of PagamentoControle
+    Valida ou nao pagamentos,
+    comunicando com ReservaControle
+    para fazer ou nao a reserva
+end note
+
+abstract class Usuario {
     - nome
     - email
     - senha
     - CPF
 }
 
-class Cliente extends Usuario{
+class UsuarioControle {
+    + cadastrarUsuario()
+    + getUsuario()
+    + atualizarUsuario()
+    + deletarUsuario()
+}
 
+class Cliente extends Usuario{
+    - List<Espaco> espacosReservados
+
+    + geters()
+    + seters ()
 }
 
 class Admin extends Usuario{
@@ -84,21 +95,26 @@ class Admin extends Usuario{
     # void administrarUsuarios()
 }
 
+EspacoControle -- Espaco
+Espaco "1"--"*"Reserva
+
+ReservaControle --> Reserva
+Reserva -- PagamentoControle
+Reserva "*"--"1" Cliente
+Reserva -- Pagamento
+
+UsuarioControle -- Usuario
 
 
+PagamentoControle --> PagamentoDinheiro
+PagamentoControle --> PagamentoCartao
 
-Reserva *-- Espaco
-Reserva -- ControlePagamento
-PagamentoDinheiro .. Cliente
-PagamentoCartao .. Cliente
-
-ControlePagamento .. PagamentoDinheiro
-ControlePagamento .. PagamentoCartao
-
-Admin ..> Espaco :administra
-Admin ..> Reserva :administra
-Admin ..> ControlePagamento :administra
+Admin --> EspacoControle
+Admin --> ReservaControle
+Admin --> PagamentoControle :administra
+Admin --> UsuarioControle :administra
 
 
-Reserva "0..1".."1" Cliente
+Cliente --> PagamentoControle :usa
+Cliente --> ReservaControle :usa
 @enduml
