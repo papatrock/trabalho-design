@@ -109,8 +109,8 @@ UsuarioControle -- Usuario
 PagamentoControle --> PagamentoDinheiro
 PagamentoControle --> PagamentoCartao
 
-Admin --> EspacoControle
-Admin --> ReservaControle
+Admin --> EspacoControle :administra
+Admin --> ReservaControle :administra
 Admin --> PagamentoControle :administra
 Admin --> UsuarioControle :administra
 

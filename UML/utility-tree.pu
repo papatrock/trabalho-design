@@ -1,0 +1,42 @@
+@startmindmap utility-tree4
+top to bottom direction
+<style>
+mindmapDiagram {
+    .root {
+        BackgroundColor: #b6a4ebff
+    }
+    .atributo{
+        BackgroundColor: #ded4fcff
+    }
+    .asr{
+        BackgroundColor: LightGreen
+    }
+    .prioridade{
+        BackgroundColor: LightGreen
+    }
+}
+</style>
+title Utility Tree
+
+* Utility <<root>>
+
+** Disponibilidade<<atributo>>
+' Além disso talvez "Ser possivel expandir para outros estados"
+*** Funcionar nos três estados diferente\n**Talvez expandir para outros estados?**\n<color: Red>Alta</color> <<asr>>
+**** <color: Red>Alta</color><<prioridade>>
+
+
+** Escalabilidade<<atributo>>
+' nao consigo centraliza essa desgraça
+*** Suportar maior trafego\nem alta temporada\n<color: #a87300ff>Média</color> <<asr>>
+**** <color: #a87300ff>Média</color> <<prioridade>>
+
+
+** Segurança <<atributo>>
+*** Garantir a segurança no\npagamento e autenticação\n<color: Red>Alta</color> <<asr>>
+**** <color: Red>Alta</color><<prioridade>>
+
+** Usabilidade <<atributo>>
+*** Ser simples de usar e gerenciar\n<color: Red>Alta</color> <<asr>>
+**** <color: Red>Alta</color><<prioridade>>
+@endmindmap
