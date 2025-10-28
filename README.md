@@ -27,6 +27,8 @@ https://plantuml.com/guide
         * Nesse caso não seria necessario um bd centralizado de reservas, só para pagamentos e gerenciamento de usuario
     * Se não
         * Precisa aver consistência de dados entre todas as filiais, como resolver double-booking nesse caso?
+     
+      na descrição: consistência das reservas entre filiais, então não
 
 
 
