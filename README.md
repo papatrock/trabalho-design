@@ -56,7 +56,7 @@ Do slide da aula 9
 
 ## Listagem das prioridades
 
-![image](https://hackmd.io/_uploads/B1LiDaUpex.png)
+![image](UML/tradeoff.png)
 
 
 ### Alta
