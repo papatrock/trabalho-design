@@ -1,0 +1,108 @@
+@startuml diagrama-classe-pos-feedback
+
+skinparam classAttributeIconSize 0
+hide empty members
+
+' --- MODELS ---
+
+class Filial {
+    - String nome
+    - String estado
+    - String endereco
+    + boolean validarEndereco()
+}
+
+class Espaco {
+    - String nome
+    - String tipo
+    - String descricao
+    - Double precoBase
+    - Int capacidade
+    - Boolean disponivel
+    + boolean estaDisponivel(Date data)
+    + Double calcularPreco(int horas)
+}
+
+class Reserva {
+    - Date dataInicial
+    - Date dataFinal
+    - Double valorFinal
+    - StatusReserva status
+    + boolean datasSaoValidas()
+    + void calcularTotal()
+}
+
+abstract class Usuario {
+    - String nome
+    - String email
+    - String cpf
+    - String senha
+    + boolean validarCPF()
+}
+
+class Cliente extends Usuario {
+    - List<Reserva> historico
+    + void adicionarAoHistorico(Reserva r)
+}
+
+class Admin extends Usuario {
+    - String nivelAcesso
+    + boolean temPermissao(String acao)
+}
+
+interface Pagamento {
+    + boolean transacaoAprovada()
+    + Double getValor()
+}
+
+class PagamentoCartao implements Pagamento {
+    - String numeroCartao
+    - String tokenSeguranca
+}
+
+class PagamentoDinheiro implements Pagamento {
+    - Double descontoAplicado
+}
+
+' --- CONTROLLERS ---
+
+class FilialControle {
+    + void cadastrarFilial(String nome, String estado)
+    + List<Espaco> listarEspacosPorEstado(String estado)
+}
+
+class EspacoControle {
+    + void cadastrarEspaco(Filial f, Espaco e)
+    + void atualizarDados(Espaco e)
+    + void desativarEspaco(Int id)
+}
+
+class ReservaControle {
+    + void solicitarReserva(Cliente c, Espaco e, Date inicio, Date fim)
+    + void cancelarReserva(Int idReserva)
+    - boolean verificarDoubleBooking(Espaco e, Date inicio, Date fim)
+}
+
+class PagamentoControle {
+    + void processarPagamento(Reserva r, Pagamento p)
+    + void estornarPagamento(Int idPagamento)
+    + void validarDadosFinanceiros()
+}
+
+' --- RELACIONAMENTOS ---
+
+Filial "1" *-- "*" Espaco : possui >
+Espaco "1" -- "*" Reserva : agendado em >
+Reserva "*" -- "1" Cliente : realizada por >
+Reserva "1" -- "1" Pagamento : paga com >
+
+FilialControle ..> Filial : gerencia
+EspacoControle ..> Espaco : gerencia
+ReservaControle ..> Reserva : gerencia
+ReservaControle ..> Cliente : gerencia
+PagamentoControle ..> Pagamento : gerencia
+
+ReservaControle ..> PagamentoControle : chama para cobrar
+ReservaControle ..> EspacoControle : consulta disponibilidade
+
+@enduml
