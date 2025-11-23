@@ -1,71 +1,25 @@
-#  Cadastro dos espaços disponiveis
+# Driagrma de classes
 
-Cadastro dos espaços disponíveis para aluguel, com informações detalhadas como fotos, capacidade e preço
+<img width="1322" height="1157" alt="image" src="https://github.com/user-attachments/assets/9e7efd4a-24a7-4a8e-b557-b9585a201f9f" />
 
-# Gerenciamento das reservas futuras
+Controller / Service Layer: 
+* EspacoService
+* PagamentoService
+* ReservaService
 
-Gerenciamento das reservas futuras, contemplando data, cliente, espaço alugado e valor pago.
+Model / Domínio:
+* Filial (model novo)
+* Espaco
+* Reserva
+* Usuario
+* Pagamento
 
-# Controle de pagamentos
+  
+# Diagrama de componentes
 
-Controle de pagamentos, indicando se a reserva possui apenas sinal pago
-ou se já está quitada.
-
-## Solução deve corrigir
-* double-booking
-* perda de informações financeira
-* aumento do tempo de operação
-* interface complexa
-
-# Modelagem
-
-https://plantuml.com/guide
-
-# (TRÊS ESTADOS DIFERENTES)
-* Cada estado tem seu proprios locais?
-    * Se sim
-        * Nesse caso não seria necessario um bd centralizado de reservas, só para pagamentos e gerenciamento de usuario
-    * Se não
-        * Precisa aver consistência de dados entre todas as filiais, como resolver double-booking nesse caso?
-     
-      na descrição: consistência das reservas entre filiais, então não
+<img width="920" height="778" alt="image" src="https://github.com/user-attachments/assets/210137c6-1049-40d2-ae24-72de855b7bd1" />
 
 
+# Fluxo reserva
 
-# ASR's (Architecturally Significant Requirements)
-
-
-* consistencias entre as filiais
-* limitações de usabilidade
-* limitações de confiabilidade
-* segurança (pagamentos)
-* tolerância a falhas
-* simples
-* intuitiva
-
-Do slide da aula 9
-* Segurança (pagamento)
-* Confiabilidade (double booking)
-* Usabilidade (a veia nao sabe usar)
-* Desempenho
-* Escalabilidade (escalabilidade elastica em alta temporada?)
-* Modificabilidade
-* Portabilidade
-
-## Utility Tree
-
-## Listagem das prioridades
-
-![image](UML/tradeoff.png)
-
-
-### Alta
-
-### Média
-
-
-### Trade-offs
-
-
-
-# Estilo arquitetural
+<img width="882" height="535" alt="image" src="https://github.com/user-attachments/assets/06fb0626-b4c6-4264-b66d-cfc1167a04d1" />
