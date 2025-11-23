@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seu Cantinho - Reservas</title>
+</head>
+<body>
+    <h1>Nova Reserva</h1>
+    <form id="formReserva">
+        <div class="form-group">
+            <label for="cliente">Nome do Cliente:</label>
+            <input type="text" id="cliente" required placeholder="Ex: Maria">
+        </div>
+
+        <div class="form-group">
+            <label for="espacoId">Espaço:</label>
+            <select id="espacoId">
+                <option value="1">Salão de fetas (Filial PR)</option>
+                <option value="2">Quadra esportiva (Filial SC)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="data">Data:</label>
+            <input type="date" id="data" required>
+        </div>
+
+        <button type="submit">Reservar Agora</button>
+    </form>
+
+    <div id="mensagem"></div>
+
+    <script src="js/main.js"></script>
+</body>
+<style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    input, select {
+      width: 100%; padding: 0.5rem;
+    }
+    button {
+      background: #28a745;
+      color: white;
+      padding: 0.7rem;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background: #218838;
+    }
+    #mensagem {
+      margin-top: 1rem;
+      padding: 1rem;
+      display: none;
+    }
+    .sucesso {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .erro {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+</style>
+</html>
