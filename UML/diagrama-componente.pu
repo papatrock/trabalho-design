@@ -1,29 +1,44 @@
-@startuml componentes
-package "Front End" {
-    [Pagina de Reservas]
-    [Dashboard]
+@startuml diagrama-componentes
 
-    HTTP - [Example]
+node "Cliente" {
+    [Interface Web (SPA/HTML)] as UI
 }
 
-package "Gateway?" {
-    [lalalal]
+node "Servidor" {
+
+    component "Controller Layer" {
+        [ReservaController]
+        [EspacoController]
+        [PagamentoController]
+    }
+
+    component "Service Layer (Regras de Negócio)" {
+        [Gestão de Reservas] as ServiceReserva
+        [Gestão Financeira] as ServicePagamento
+        [Gestão de Filiais] as ServiceFilial
+    }
+
+    component "Persistence Layer" {
+        [ReservaRepository]
+        [EspacoRepository]
+    }
 }
 
-package "Back End" {
-
-    [ControlePagamento]
-    [Reserva]
-    [Pagamento]
-
+database "Banco de Dados Centralizado" {
+    [PostgreSQL / MySQL] as DB
 }
 
+UI --> [ReservaController] : HTTP/JSON
+UI --> [EspacoController] : HTTP/JSON
 
-package "Autenticação" {
-    [Autenticacao]
-}
+[ReservaController] --> ServiceReserva
+[PagamentoController] --> ServicePagamento
 
-database "Postgres" {
+ServiceReserva --> ServicePagamento : Solicita cobrança
+ServiceReserva --> [ReservaRepository] : Persiste dados
+ServiceFilial --> [EspacoRepository]
 
-}
+[ReservaRepository] --> DB : SQL (Transações ACID)
+[EspacoRepository] --> DB : SQL
+
 @enduml
