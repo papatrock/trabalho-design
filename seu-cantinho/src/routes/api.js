@@ -47,8 +47,6 @@ const reservaController = require('../controllers/reservaController');
  *                   example: "Listagem de reservas aqui"
  */
 router.post('/reservas', reservaController.criarReserva);
-router.get('/reservas', (req, res) => {
-    res.json({ message: "Listagem de reservas aqui" });
-});
+router.get('/reservas', reservaController.buscarReservas);
 
 module.exports = router;

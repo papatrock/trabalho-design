@@ -4,6 +4,10 @@ const Reserva = require('../models/reserva');
 
 class ReservaService {
 
+    async buscarTodos(){
+        return await Reserva.buscarTodos(db);
+    }
+
     async processarNovaReserva(dados) {
         const client = await db.getClient();
 

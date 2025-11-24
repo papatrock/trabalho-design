@@ -25,6 +25,12 @@ class ReservaController {
             return res.status(500).json({ error: "Erro interno ao processar reserva." });
         }
     }
+
+    async buscarReservas(requisicao, resposta){
+        const reservas = await reservaService.buscarTodos();
+
+        return resposta.json({reservas})
+    }
 }
 
 module.exports = new ReservaController();
