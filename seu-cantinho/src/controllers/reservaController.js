@@ -43,6 +43,14 @@ class ReservaController {
 
         return resposta.json({reserva});
     }
+
+    async atualizarReserva(requisicao, resposta) {
+        // se a data mudar, validade disponibilidade antes
+    }
+
+    async deletarReserva(requisicao, resposta) {
+
+    }
 }
 
 module.exports = new ReservaController();
