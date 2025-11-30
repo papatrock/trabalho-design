@@ -4,16 +4,16 @@ class EspacoController {
 
   async buscarEspacos(req, res) {
       const espacos = await espacoService.buscarTodos();
-      console.log("ESPACOS NO CONTROLLER", espacos);
       return res.json({ espacos });
   }
 
   async buscarEspacoPorId(req, res) {
-      try {
-        return res.status(501).json({ message: "wip" });
-      } catch (error) {
-        return res.status(500).json({ error: "Erro interno" });
-      }
+      const { id } = req.params;
+    const espaco = await espacoService.buscarPorId(id);
+    if (!espaco){
+        return res.status(404).json({ error: "Espaço não encontrado" });
+    }
+    return res.json({ espaco });
   }
 
   async criarEspaco(req, res) {

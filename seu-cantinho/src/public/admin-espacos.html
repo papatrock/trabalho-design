@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Espaços - Admin</title>
+</head>
+<body>
+    <header>
+        <h1>Gerenciar Espaços</h1>
+        <nav>
+            <a href="espacos.html" class="nav-link">Voltar para Home</a>
+            <button onclick="Auth.logout()" class="delete">Sair</button>
+        </nav>
+    </header>
+
+    <!-- Formulário de Cadastro -->
+    <div class="form-card">
+        <h3>Cadastrar Novo Espaço</h3>
+        <form id="formEspaco">
+            <div class="form-group">
+                <label>Nome do Espaço:</label>
+                <input type="text" id="nome" required>
+            </div>
+            <div class="form-group">
+                <label>Filial (ID):</label>
+                <!-- Idealmente seria um select dinâmico carregando as filiais -->
+                <select id="filialId">
+                    <option value="1">Filial Curitiba (1)</option>
+                    <option value="2">Filial São Paulo (2)</option>
+                    <option value="3">Filial Rio de Janeiro (3)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Capacidade:</label>
+                <input type="number" id="capacidade" required>
+            </div>
+            <div class="form-group">
+                <label>Preço Base (R$):</label>
+                <input type="number" id="precoBase" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label>Descrição:</label>
+                <textarea id="descricao"></textarea>
+            </div>
+            <button type="submit">Salvar Espaço</button>
+        </form>
+        <p id="msgForm" style="margin-top: 10px;"></p>
+    </div>
+
+    <!-- Lista de Espaços -->
+    <h3>Lista de Espaços Cadastrados</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Filial</th>
+                <th>Capacidade</th>
+                <th>Preço</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="tabelaEspacos">
+            <!-- Preenchido via JS -->
+        </tbody>
+    </table>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
+<style>
+    body {
+        font-family: sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .form-card {
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    button {
+        padding: 10px 15px;
+        background: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    button.delete {
+        background: #dc3545;
+    }
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+    .nav-link {
+        margin-right: 15px;
+        text-decoration: none;
+        color: #333;
+    }
+</style>
+
+<script>
+    // ADMIN
+    Auth.requireAuth();
+    const user = Auth.getUser();
+    if (user.role !== 'ADMIN') {
+        alert('Acesso negado. Apenas administradores.');
+        window.location.href = 'espacos.html';
+    }
+
+    const tabela = document.getElementById('tabelaEspacos');
+    const form = document.getElementById('formEspaco');
+    const msg = document.getElementById('msgForm');
+
+    async function carregarTabela() {
+        try {
+            const res = await fetch('/api/espacos');
+            const json = await res.json();
+            const lista = json.espacos || json.data || [];
+
+            tabela.innerHTML = '';
+            lista.forEach(e => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${e.id}</td>
+                    <td>${e.nome}</td>
+                    <td>${e.filial_nome || e.filial_id}</td>
+                    <td>${e.capacidade}</td>
+                    <td>R$ ${parseFloat(e.preco_base).toFixed(2)}</td>
+                    <td>
+                        <button class="delete" onclick="deletarEspaco(${e.id})">Excluir</button>
+                        </td>
+                `;
+                tabela.appendChild(tr);
+            });
+        } catch (err) {
+            console.error(err);
+            tabela.innerHTML = '<tr><td colspan="6">Erro ao carregar</td></tr>';
+        }
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        msg.innerText = 'Salvando...';
+
+        const dados = {
+            nome: document.getElementById('nome').value,
+            filialId: document.getElementById('filialId').value,
+            capacidade: document.getElementById('capacidade').value,
+            precoBase: document.getElementById('precoBase').value,
+            descricao: document.getElementById('descricao').value
+        };
+
+        try {
+            const res = await fetch('/api/espacos', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(dados)
+            });
+
+            if (res.ok) {
+                msg.innerText = 'Espaço salvo com sucesso!';
+                msg.style.color = 'green';
+                form.reset();
+                carregarTabela();
+            } else {
+                const err = await res.json();
+                msg.innerText = 'Erro: ' + (err.error || 'Falha ao salvar');
+                msg.style.color = 'red';
+            }
+        } catch (err) {
+            msg.innerText = 'Erro de conexão';
+        }
+    });
+
+    async function deletarEspaco(id) {
+        if(!confirm('Tem certeza que deseja excluir este espaço?')) return;
+
+        try {
+            const res = await fetch(`/api/espacos/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                alert('Espaço removido!');
+                carregarTabela();
+            } else {
+                alert('Erro ao remover.');
+            }
+        } catch (err) {
+            alert('Erro de conexão.');
+        }
+    }
+
+carregarTabela();
+</script>
