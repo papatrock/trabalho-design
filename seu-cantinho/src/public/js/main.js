@@ -84,7 +84,7 @@ document.getElementById('formReserva').addEventListener('submit', async (event) 
             mensagemDiv.innerHTML = `
             <strong>Sucesso!</strong> Reserva confirmada.<br>
             ID: ${resultado.data.id} <br>
-            <a href="espacos.html">Voltar para Dashboard</a>
+            <a href="espacos.html">Voltar para espaços disponiveis (TODO: VOLTAR PARA MINHAS RESERVAS QUANDO TIVER)</a>
             `;
             document.getElementById('data').value = '';
         } else {
