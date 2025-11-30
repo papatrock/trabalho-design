@@ -71,7 +71,7 @@ seu-cantinho/
 
 
 
-# Driagrma de classes
+# Diagrama de classes
 
 <img width="1322" height="1157" alt="image" src="https://github.com/user-attachments/assets/9e7efd4a-24a7-4a8e-b557-b9585a201f9f" />
 
