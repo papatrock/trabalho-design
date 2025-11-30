@@ -1,4 +1,4 @@
-const reservaService = require('../services/reservaService');
+const reservaService = require('../services/ReservaService');
 
 
 class ReservaController {

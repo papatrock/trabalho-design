@@ -1,14 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const reservaController = require('../controllers/reservaController');
-
+const reservaController = require('../controllers/ReservaController');
+const usuarioController = require('../controllers/UsuarioController');
+const espacoController = require('../controllers/EspacoController');
+const pagamentoController = require('../controllers/PagamentoController');
 
 /**
  * @swagger
  * tags:
  *   - name: Reservas
  *     description: Gerenciamento de reservas
-*/
+ */
 
 /**
  * @swagger
@@ -28,12 +30,6 @@ const reservaController = require('../controllers/reservaController');
  *                 message:
  *                   type: string
  *                   example: "Listagem de reservas aqui"
- */
-router.get('/reservas', reservaController.buscarReservas);
-
-/**
- * @swagger
- * /reservas:
  *   post:
  *     summary: Cria uma nova reserva
  *     tags:
@@ -51,9 +47,8 @@ router.get('/reservas', reservaController.buscarReservas);
  *         description: Conflito (Double Booking)
  *       '500':
  *         description: Erro no servidor
- *
- *
-  */
+ */
+router.get('/reservas', reservaController.buscarReservas);
 router.post('/reservas', reservaController.criarReserva);
 
 /**
@@ -77,13 +72,6 @@ router.post('/reservas', reservaController.criarReserva);
  *         description: Reserva não encontrada
  *       '500':
  *         description: Erro no servidor
- */
-router.get('/reservas/:id', reservaController.buscarReservaPorId);
-
-
-/**
- * @swagger
- * /reservas/{id}:
  *   put:
  *     summary: Atualiza uma reserva existente
  *     tags:
@@ -108,12 +96,6 @@ router.get('/reservas/:id', reservaController.buscarReservaPorId);
  *         description: Reserva não encontrada
  *       '500':
  *         description: Erro no servidor
- */
- router.put('/reservas/:id', reservaController.atualizarReserva);
-
-/**
- * @swagger
- * /reservas/{id}:
  *   delete:
  *     summary: Deleta uma reserva existente
  *     tags:
@@ -133,6 +115,208 @@ router.get('/reservas/:id', reservaController.buscarReservaPorId);
  *       '500':
  *         description: Erro no servidor
  */
+router.get('/reservas/:id', reservaController.buscarReservaPorId);
+router.put('/reservas/:id', reservaController.atualizarReserva);
 router.delete('/reservas/:id', reservaController.deletarReserva);
+
+
+/**
+ * @swagger
+ * /usuarios:
+ *   post:
+ *     summary: Cadastra um novo usuário
+ *     tags:
+ *       - Usuarios
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Usuario'
+ *     responses:
+ *       '201':
+ *         description: Usuário criado
+ *       '501':
+ *         description: Não implementado
+ *   get:
+ *     summary: Lista usuários
+ *     tags:
+ *       - Usuarios
+ *     responses:
+ *       '501':
+ *         description: Não implementado
+ */
+router.post('/usuarios', usuarioController.criarUsuario);
+router.get('/usuarios', usuarioController.listarUsuarios);
+
+/**
+ * @swagger
+ * /usuarios/{id}:
+ *   get:
+ *     summary: Busca usuário por ID
+ *     tags:
+ *       - Usuarios
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '501':
+ *         description: Não implementado
+ *   put:
+ *     summary: Atualiza usuário
+ *     tags:
+ *       - Usuarios
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '501':
+ *         description: Não implementado
+ *   delete:
+ *     summary: Remove usuário
+ *     tags:
+ *       - Usuarios
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '501':
+ *         description: Não implementado
+ */
+router.get('/usuarios/:id', usuarioController.buscarUsuarioPorId);
+router.put('/usuarios/:id', usuarioController.atualizarUsuario);
+router.delete('/usuarios/:id', usuarioController.deletarUsuario);
+
+/**
+ * @swagger
+ * /espacos:
+ *   post:
+ *     summary: Cadastra um novo espaço
+ *     tags:
+ *       - Espacos
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Espaco'
+ *     responses:
+ *       '501':
+ *         description: Não implementado
+ *   get:
+ *     summary: Lista espaços disponíveis
+ *     tags:
+ *       - Espacos
+ *     responses:
+ *       '501':
+ *         description: Não implementado
+ */
+router.post('/espacos', espacoController.criarEspaco);
+router.get('/espacos', espacoController.listarEspacos);
+
+/**
+ * @swagger
+ * /espacos/{id}:
+ *   get:
+ *     summary: Busca espaço por ID
+ *     tags:
+ *       - Espacos
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '501':
+ *         description: Não implementado
+ *   put:
+ *     summary: Atualiza dados do espaço
+ *     tags:
+ *       - Espacos
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '501':
+ *         description: Não implementado
+ *   delete:
+ *     summary: Remove/Desativa um espaço
+ *     tags:
+ *       - Espacos
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '501':
+ *         description: Não implementado
+ */
+router.get('/espacos/:id', espacoController.buscarEspacoPorId);
+router.put('/espacos/:id', espacoController.atualizarEspaco);
+router.delete('/espacos/:id', espacoController.deletarEspaco);
+
+/**
+ * @swagger
+ * /pagamentos:
+ *   post:
+ *     summary: Processa um novo pagamento
+ *     tags:
+ *       - Pagamentos
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Pagamento'
+ *     responses:
+ *       '501':
+ *         description: Não implementado
+ */
+router.post('/pagamentos', pagamentoController.processarPagamento);
+
+/**
+ * @swagger
+ * /pagamentos/{id}:
+ *   get:
+ *     summary: Busca detalhes do pagamento
+ *     tags:
+ *       - Pagamentos
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '501':
+ *         description: Não implementado
+ *   delete:
+ *     summary: Estorna/Cancela um pagamento
+ *     tags:
+ *       - Pagamentos
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '501':
+ *         description: Não implementado
+ */
+router.get('/pagamentos/:id', pagamentoController.buscarPagamentoPorId);
+router.delete('/pagamentos/:id', pagamentoController.estornarPagamento);
 
 module.exports = router;
