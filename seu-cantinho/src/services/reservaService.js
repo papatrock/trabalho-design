@@ -8,6 +8,10 @@ class ReservaService {
         return await Reserva.buscarTodos(db);
     }
 
+    async buscarPorId(id){
+        return await Reserva.buscarPorId(db, id);
+    }
+
     async processarNovaReserva(dados) {
         const client = await db.getClient();
 

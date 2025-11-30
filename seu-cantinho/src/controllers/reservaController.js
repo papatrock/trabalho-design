@@ -31,6 +31,18 @@ class ReservaController {
 
         return resposta.json({reservas})
     }
+
+    async buscarReservaPorId(requisicao, resposta){
+        const {id} = requisicao.params;
+
+        const reserva = await reservaService.buscarPorId(id);
+
+        if(!reserva){
+            return resposta.status(404).json({error: 'Reserva não encontrada'});
+        }
+
+        return resposta.json({reserva});
+    }
 }
 
 module.exports = new ReservaController();

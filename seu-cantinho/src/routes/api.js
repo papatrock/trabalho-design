@@ -45,8 +45,28 @@ const reservaController = require('../controllers/reservaController');
  *                 message:
  *                   type: string
  *                   example: "Listagem de reservas aqui"
+ * /reservas/{id}:
+ *   get:
+ *     summary: Obtém uma reserva por ID
+ *     tags:
+ *       - Reservas
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           description: ID da reserva
+ *     responses:
+ *       '200':
+ *         description: Reserva encontrada
+ *       '404':
+ *         description: Reserva não encontrada
+ *       '500':
+ *         description: Erro no servidor
  */
 router.post('/reservas', reservaController.criarReserva);
 router.get('/reservas', reservaController.buscarReservas);
+router.get('/reservas/:id', reservaController.buscarReservaPorId);
 
 module.exports = router;
