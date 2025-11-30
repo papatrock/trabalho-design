@@ -4,6 +4,7 @@ const reservaController = require('../controllers/ReservaController');
 const usuarioController = require('../controllers/UsuarioController');
 const espacoController = require('../controllers/EspacoController');
 const pagamentoController = require('../controllers/PagamentoController');
+const filialController = require('../controllers/FilialController');
 
 /**
  * @swagger
@@ -382,5 +383,88 @@ router.delete('/pagamentos/:id', pagamentoController.estornarPagamento);
  *         description: Credenciais inválidas
  */
 router.post('/login', usuarioController.login);
+
+/**
+ * @swagger
+ * /filiais:
+ *   get:
+ *     summary: Lista todas as filiais
+ *     tags:
+ *       - Filiais
+ *     responses:
+ *       '200':
+ *         description: Lista de filiais
+ *   post:
+ *     summary: Cria uma nova filial
+ *     tags:
+ *       - Filiais
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               estado:
+ *                 type: string
+ *               endereco:
+ *                 type: string
+ *     responses:
+ *       '201':
+ *         description: Criada
+ */
+router.get('/filiais', filialController.listarFiliais);
+router.post('/filiais', filialController.criarFilial);
+
+/**
+ * @swagger
+ * /filiais/{id}:
+ *   get:
+ *     summary: Busca filial por ID
+ *     tags:
+ *       - Filiais
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '200':
+ *         description: Encontrada
+ *   put:
+ *     summary: Atualiza filial
+ *     tags:
+ *       - Filiais
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '200':
+ *         description: Atualizada
+ *   delete:
+ *     summary: Remove filial (se não tiver espaços)
+ *     tags:
+ *       - Filiais
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '200':
+ *         description: Removida
+ *       '409':
+ *         description: Erro - Filial possui espaços vinculados
+ */
+router.get('/filiais/:id', filialController.buscarFilialPorId);
+router.put('/filiais/:id', filialController.atualizarFilial);
+router.delete('/filiais/:id', filialController.deletarFilial);
 
 module.exports = router;

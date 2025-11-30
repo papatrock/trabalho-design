@@ -14,7 +14,6 @@
         </nav>
     </header>
 
-    <!-- Formulário de Cadastro -->
     <div class="form-card">
         <h3>Cadastrar Novo Espaço</h3>
         <form id="formEspaco">
@@ -23,12 +22,9 @@
                 <input type="text" id="nome" required>
             </div>
             <div class="form-group">
-                <label>Filial (ID):</label>
-                <!-- Idealmente seria um select dinâmico carregando as filiais -->
-                <select id="filialId">
-                    <option value="1">Filial Curitiba (1)</option>
-                    <option value="2">Filial São Paulo (2)</option>
-                    <option value="3">Filial Rio de Janeiro (3)</option>
+                <label for="filialId">Filial:</label>
+                <select id="filialId" required>
+                    <option value="">Carregando filiais...</option>
                 </select>
             </div>
             <div class="form-group">
@@ -48,7 +44,6 @@
         <p id="msgForm" style="margin-top: 10px;"></p>
     </div>
 
-    <!-- Lista de Espaços -->
     <h3>Lista de Espaços Cadastrados</h3>
     <table>
         <thead>
@@ -62,7 +57,6 @@
             </tr>
         </thead>
         <tbody id="tabelaEspacos">
-            <!-- Preenchido via JS -->
         </tbody>
     </table>
 
@@ -161,6 +155,7 @@
     const tabela = document.getElementById('tabelaEspacos');
     const form = document.getElementById('formEspaco');
     const msg = document.getElementById('msgForm');
+     const selectFilial = document.getElementById('filialId');
 
     async function carregarTabela() {
         try {
@@ -239,5 +234,25 @@
         }
     }
 
+    async function carregarFiliais() {
+        try {
+            const res = await fetch('/api/filiais');
+            const json = await res.json();
+            const filiais = json.filiais || [];
+
+            selectFilial.innerHTML = '<option value="">Selecione uma filial...</option>';
+
+            filiais.forEach(f => {
+                const option = document.createElement('option');
+                option.value = f.id;
+                option.textContent = `${f.nome} (${f.estado})`;
+                selectFilial.appendChild(option);
+            });
+        } catch (err) {
+            console.error("Erro ao carregar filiais:", err);
+            selectFilial.innerHTML = '<option value="">Erro ao carregar</option>';
+        }
+    }
+carregarFiliais();
 carregarTabela();
 </script>
