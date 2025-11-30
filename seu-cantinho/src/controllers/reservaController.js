@@ -45,11 +45,33 @@ class ReservaController {
     }
 
     async atualizarReserva(requisicao, resposta) {
-        // se a data mudar, validade disponibilidade antes
+        try {
+            const { id } = requisicao.params;
+            const dados = requisicao.body;
+
+            const reservaAtualizada = await reservaService.atualizarReserva(id, dados);
+
+            return resposta.json({ success: true, message: "Atualizado com sucesso.", data: reservaAtualizada });
+
+        } catch (error) {
+            console.error("Erro update:", error);
+            if (error.message === 'RESERVA_NAO_ENCONTRADA')
+                return resposta.status(404).json({ error: "Reserva não encontrada." });
+            if (error.message === 'DOUBLE_BOOKING')
+                return resposta.status(409).json({ error: "Conflito: Nova data/local já ocupados." });
+            return resposta.status(500).json({ error: "Erro interno." });
+        }
     }
 
     async deletarReserva(requisicao, resposta) {
-
+        try {
+            const { id } = req.params;
+            await reservaService.cancelarReserva(id);
+            return res.json({ success: true, message: `Reserva ${id} foi excluída com sucesso.` });
+        } catch (error) {
+            if (error.message === 'RESERVA_NAO_ENCONTRADA') return res.status(404).json({ error: "Reserva não encontrada." });
+            return res.status(500).json({ error: "Erro ao excluir." });
+        }
     }
 }
 

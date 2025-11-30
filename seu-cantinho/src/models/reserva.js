@@ -2,15 +2,17 @@
 class Reserva {
 
     async verificarDisponibilidadeComLock(client, espacoId, data) {
-        /*
-           const sql = `SELECT * FROM reservas
-                        WHERE espaco_id = $1 AND data = $2
-                        FOR UPDATE`;
-        */
+          const sql = `
+            SELECT id FROM reservas
+            WHERE espaco_id = $1 AND data_reserva = $2
+            FOR UPDATE
+        `;
+        const result = await client.query(sql, [espacoId, data]);
+        return result.rows.length === 0;
 
         // Mockando retorno para o exemplo funcionar sem criar tabelas agora
-        console.log(`verificando disponibilidade (LOCK) para Espaço ${espacoId} na data ${data}`);
-        return true;
+        //console.log(`verificando disponibilidade (LOCK) para Espaço ${espacoId} na data ${data}`);
+        //return true;
     }
 
     async criar(client, dados) {
@@ -63,6 +65,46 @@ class Reserva {
         const result = await pool.query(sql, [id]);
         return result.rows[0];
     }
+
+     async atualizarReserva(client, id, dados) {
+        const campos = [];
+        const valores = [];
+        let contador = 1;
+
+        if (dados.espacoId) {
+            campos.push(`espaco_id = $${contador++}`);
+            valores.push(dados.espacoId);
+        }
+        if (dados.data) {
+            campos.push(`data_reserva = $${contador++}`);
+            valores.push(dados.data);
+        }
+        if (dados.status) {
+            campos.push(`status = $${contador++}`);
+            valores.push(dados.status);
+        }
+
+        if (campos.length === 0) return null;
+
+        valores.push(id);
+
+        const sql = `
+            UPDATE reservas
+            SET ${campos.join(', ')}
+            WHERE id = $${contador}
+            RETURNING id, data_reserva, status, espaco_id
+        `;
+
+        const result = await client.query(sql, valores);
+        return result.rows[0];
+    }
+
+    async deletarReserva(client, id) {
+        const sql = `DELETE FROM reservas WHERE id = $1 RETURNING id`;
+        const result = await client.query(sql, [id]);
+        return result.rows[0];
+    }
+
 }
 
 module.exports = new Reserva();
