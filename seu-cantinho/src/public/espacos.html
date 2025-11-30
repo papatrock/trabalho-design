@@ -12,6 +12,7 @@
             <small id="welcomeUser"></small>
         </div>
         <div>
+            <a href="admin-espacos.html" id="btnAdmin" class="btn btn-admin">Gerenciar Espaços</a>
             <button onclick="Auth.logout()" class="btn btn-logout">Sair</button>
         </div>
     </header>
@@ -35,9 +36,14 @@
 <script>
     // protege rota
     Auth.requireAuth();
-
     const user = Auth.getUser();
     document.getElementById('welcomeUser').textContent = `${user.nome}`;
+
+    if (user.role === 'ADMIN') {
+        const btnAdmin = document.getElementById('btnAdmin');
+        btnAdmin.style.display = 'inline-block';
+    }
+
 
     async function renderEspacos() {
         const container = document.getElementById('listaEspacos');
@@ -174,5 +180,11 @@
     .btn-logout {
         background: #dc3545;
         color: white;
+    }
+    .btn-admin {
+        display: none;
+        margin-right: 15px;
+        text-decoration: none;
+        color: #333;
     }
 </style>

@@ -9,6 +9,8 @@ class ReservaController {
 
             const novaReserva = await reservaService.criarReserva(dadosReserva);
 
+            console.log("[ReservaController] Criando reserva com dados:", dadosReserva);
+
             return res.status(201).json({
                 success: true,
                 message: "Reserva criada com sucesso!",
