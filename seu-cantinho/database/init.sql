@@ -60,7 +60,7 @@ INSERT INTO espacos (filial_id, nome, capacidade, preco_base, descricao) VALUES
 
 INSERT INTO usuarios (nome, email, cpf, senha, role) VALUES
 ('Admin', 'admin@admin.com', '000.000.000-00', 'admin', 'ADMIN'),
-('Tobias da Silva', 'saibot@gmail.com', '111.111.111-11', '123', 'CLIENTE')
+('Tobias da Silva', 'saibot@gmail.com', '111.111.111-11', '123', 'CLIENTE'),
 ('João Gabriel B', 'joaoDoC++@gmail.com', '222.222.222-22', '123', 'CLIENTE');
 
 INSERT INTO reservas (cliente_id, espaco_id, data_reserva, valor_total, status) VALUES
