@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espaços Disponíveis</title>
+    <title>Seu Cantinho</title>
 </head>
 <body>
     <header>
         <div>
-            <h2>Espaços Disponíveis</h2>
+            <h2>Seu Cantinho</h2>
             <small id="welcomeUser"></small>
         </div>
         <div>
@@ -16,61 +16,125 @@
         </div>
     </header>
 
-    <div id="listaEspacos">
-        <p>Carregando...</p>
-    </div>
+    <section class="reserva-section">
+        <h3 class="section-title">Minhas Reservas</h3>
+        <div id="listaReservas">
+            <p>Carregando reservas...</p>
+        </div>
+    </section>
+    <section>
+        <h3 class="section-title">Espaços Disponíveis</h3>
+        <div id="listaEspacos">
+            <p>Carregando espaços...</p>
+        </div>
+    </section>
 
     <script src="js/auth.js"></script>
-    <script>
-        // protege rota
-        Auth.requireAuth();
-
-        const user = Auth.getUser();
-        document.getElementById('welcomeUser').textContent = `Logado como: ${user.nome}`;
-
-        async function renderEspacos() {
-            const container = document.getElementById('listaEspacos');
-
-            try {
-                const response = await fetch('/api/espacos');
-                const resultado = await response.json();
-
-                const lista = resultado.espacos || resultado.data || [];
-
-                container.innerHTML = '';
-
-                if (lista.length > 0) {
-                    lista.forEach(espaco => {
-                        const div = document.createElement('div');
-                        div.className = 'espaco-card';
-
-                        // Formata o preço para BRL
-                        const precoFormatado = parseFloat(espaco.preco_base).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-                        div.innerHTML = `
-                            <div class="espaco-info">
-                                <h3>${espaco.nome}</h3>
-                                <p>${espaco.filial_nome || 'Filial'} | Cap: ${espaco.capacidade} pessoas</p>
-                                <strong>${precoFormatado}</strong>
-                            </div>
-                            <a href="nova-reserva.html?espacoId=${espaco.id}" class="btn btn-primary">Reservar</a>
-                        `;
-                        container.appendChild(div);
-                    });
-                } else {
-                    container.innerHTML = '<p class="erro-msg">Nenhum espaço encontrado no sistema.</p>';
-                }
-
-            } catch (error) {
-                console.error("Erro ao carregar dashboard:", error);
-                container.innerHTML = '<p class="erro-msg">Erro ao carregar espaços. Tente novamente mais tarde.</p>';
-            }
-        }
-
-        renderEspacos();
-    </script>
 </body>
 </html>
+<script>
+    // protege rota
+    Auth.requireAuth();
+
+    const user = Auth.getUser();
+    document.getElementById('welcomeUser').textContent = `${user.nome}`;
+
+    async function renderEspacos() {
+        const container = document.getElementById('listaEspacos');
+
+        try {
+            const response = await fetch('/api/espacos');
+            const resultado = await response.json();
+
+            const lista = resultado.espacos || resultado.data || [];
+
+            container.innerHTML = '';
+
+            if (lista.length > 0) {
+                lista.forEach(espaco => {
+                    const div = document.createElement('div');
+                    div.className = 'espaco-card';
+
+                    // Formata o preço para BRL
+                    const precoFormatado = parseFloat(espaco.preco_base).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                    div.innerHTML = `
+                        <div class="espaco-info">
+                            <h3>${espaco.nome}</h3>
+                            <p>${espaco.filial_nome || 'Filial'} | Cap: ${espaco.capacidade} pessoas</p>
+                            <strong>${precoFormatado}</strong>
+                        </div>
+                        <a href="nova-reserva.html?espacoId=${espaco.id}" class="btn btn-primary">Reservar</a>
+                    `;
+                    container.appendChild(div);
+                });
+            } else {
+                container.innerHTML = '<p class="erro-msg">Nenhum espaço encontrado no sistema.</p>';
+            }
+
+        } catch (error) {
+            console.error("Erro ao carregar dashboard:", error);
+            container.innerHTML = '<p class="erro-msg">Erro ao carregar espaços. Tente novamente mais tarde.</p>';
+        }
+    }
+
+    async function carregarReservas() {
+        const container = document.getElementById('listaReservas');
+        try {
+            const response = await fetch(`/api/reservasPorUsuario?usuarioId=${user.id}`);
+            const resultado = await response.json();
+
+            // O controller retorna { reservas: [...] }
+            const reservas = resultado.reservas || [];
+
+            container.innerHTML = '';
+
+            if (reservas.length > 0) {
+                reservas.forEach(reserva => {
+                    const div = document.createElement('div');
+                    div.className = 'reserva-card';
+
+                    // Formata a data (YYYY-MM-DD -> DD/MM/YYYY)
+                    const dataFormatada = reserva.data.split('-').reverse().join('/');
+
+                    div.innerHTML = `
+                        <div>
+                            <strong>${reserva.espaco_nome}</strong> (${reserva.filial_estado}) <br>
+                            Data: ${dataFormatada} - Status: <b>${reserva.status}</b>
+                        </div>
+                        <div>
+                            <button onclick="cancelarReserva(${reserva.id})" class="btn btn-cancel">Cancelar</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            } else {
+                container.innerHTML = '<p class="empty-msg">Você não tem reservas ativas.</p>';
+            }
+        } catch (error) {
+            console.error(error);
+            container.innerHTML = '<p class="erro-msg">Erro ao carregar reservas.</p>';
+        }
+    }
+
+    async function cancelarReserva(id) {
+        if(!confirm("Deseja realmente cancelar?")) return;
+        try {
+            const res = await fetch(`/api/reservas/${id}`, { method: 'DELETE' });
+            if(res.ok) {
+                alert('Reserva cancelada/excluída.');
+                carregarReservas(); // Recarrega a lista
+            } else {
+                alert('Erro ao cancelar.');
+            }
+        } catch (e) {
+            alert('Erro de conexão.');
+        }
+    }
+
+    renderEspacos();
+    carregarReservas();
+</script>
 <style>
     body {
         font-family: sans-serif;

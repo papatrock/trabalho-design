@@ -17,7 +17,7 @@ class Reserva {
 
     async criar(client, dados) {
 
-        let clienteId = 1; // TODO implementar logica de clientes
+        let clienteId = dados.usuarioId ||1;
 
         const sql = `
             INSERT INTO reservas (cliente_id, espaco_id, data_reserva, valor_total, status)
@@ -110,6 +110,28 @@ class Reserva {
         return result.rows[0];
     }
 
+    async buscarReservasPorUsuario(pool, usuarioId) {
+
+        const sql = `
+        SELECT
+                r.id,
+                to_char(r.data_reserva, 'YYYY-MM-DD') as data,
+                r.valor_total,
+                r.status,
+                u.nome as cliente_nome,
+                e.nome as espaco_nome,
+                f.estado as filial_estado
+            FROM reservas r
+            JOIN usuarios u ON r.cliente_id = u.id
+            JOIN espacos e ON r.espaco_id = e.id
+            JOIN filiais f ON e.filial_id = f.id
+            WHERE r.cliente_id = $1
+            ORDER BY r.data_reserva DESC
+        `;
+
+        const result = await pool.query(sql, [usuarioId]);
+        return result.rows;
+    }
 }
 
 module.exports = new Reserva();

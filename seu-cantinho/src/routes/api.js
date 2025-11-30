@@ -119,6 +119,28 @@ router.get('/reservas/:id', reservaController.buscarReservaPorId);
 router.put('/reservas/:id', reservaController.atualizarReserva);
 router.delete('/reservas/:id', reservaController.deletarReserva);
 
+/**
+ * @swagger
+ * /reservasPorUsuario:
+ *   get:
+ *     summary: Lista reservas por ID do usuário
+ *     tags:
+ *       - Reservas
+ *     parameters:
+ *       - in: query
+ *         name: usuarioId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do usuário
+ *     responses:
+ *       '200':
+ *         description: Lista de reservas do usuário retornada com sucesso
+ *       '500':
+ *         description: Erro no servidor
+ */
+router.get('/reservasPorUsuario', reservaController.buscarReservasPorUsuario);
+
 
 /**
  * @swagger

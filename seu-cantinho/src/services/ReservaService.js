@@ -99,6 +99,9 @@ class ReservaService {
         }
     }
 
+    async buscarReservasPorUsuario(usuarioId) {
+        return await Reserva.buscarReservasPorUsuario(db, usuarioId);
+    }
 
     // mock do pagamento, sempre true pro enquanto
     mockProcessarPagamento() {

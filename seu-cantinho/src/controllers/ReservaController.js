@@ -78,6 +78,22 @@ class ReservaController {
             return resposta.status(500).json({ error: "Erro ao excluir." });
         }
     }
+
+    async buscarReservasPorUsuario(req, res) {
+        try {
+            const { usuarioId } = req.query;
+            console.log("USUARIO ID:", usuarioId);
+
+            if (!usuarioId) {
+                return res.status(400).json({ error: "Parâmetro usuarioId é obrigatório." });
+            }
+            const reservas = await reservaService.buscarReservasPorUsuario(usuarioId);
+
+            return res.json({ reservas });
+        } catch (error) {
+            return res.status(500).json({ error: "Erro interno" });
+        }
+    }
 }
 
 module.exports = new ReservaController();
