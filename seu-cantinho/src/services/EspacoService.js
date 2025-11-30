@@ -1,11 +1,12 @@
 const db = require('../config/database');
+const Espaco = require('../models/Espaco');
 
 class EspacoService {
     async criar(dados) {
 
      }
-    async listar() {
-
+    async buscarTodos() {
+        return await Espaco.listar(db);
      }
     async buscarPorId(id) {
 
@@ -15,7 +16,7 @@ class EspacoService {
      }
     async deletar(id) {
 
-     }
+    }
 }
 
 module.exports = new EspacoService();

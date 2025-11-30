@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espaços Disponíveis</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
+        .espaco-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .espaco-info h3 { margin: 0 0 5px 0; }
+        .btn { padding: 8px 16px; border-radius: 4px; text-decoration: none; cursor: pointer; border: none; }
+        .btn-primary { background: #28a745; color: white; }
+        .btn-logout { background: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <h2>Espaços Disponíveis</h2>
+            <small id="welcomeUser"></small>
+        </div>
+        <div>
+            <button onclick="Auth.logout()" class="btn btn-logout">Sair</button>
+        </div>
+    </header>
+
+    <div id="listaEspacos">
+        <p>Carregando...</p>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // protege rota
+        Auth.requireAuth();
+
+        const user = Auth.getUser();
+        document.getElementById('welcomeUser').textContent = `Logado como: ${user.nome}`;
+
+        async function renderEspacos() {
+            const container = document.getElementById('listaEspacos');
+
+            try {
+                const response = await fetch('/api/espacos');
+                const resultado = await response.json();
+
+                const lista = resultado.espacos || resultado.data || [];
+
+                container.innerHTML = '';
+
+                if (lista.length > 0) {
+                    lista.forEach(espaco => {
+                        const div = document.createElement('div');
+                        div.className = 'espaco-card';
+
+                        // Formata o preço para BRL
+                        const precoFormatado = parseFloat(espaco.preco_base).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                        div.innerHTML = `
+                            <div class="espaco-info">
+                                <h3>${espaco.nome}</h3>
+                                <p>${espaco.filial_nome || 'Filial'} | Cap: ${espaco.capacidade} pessoas</p>
+                                <strong>${precoFormatado}</strong>
+                            </div>
+                            <a href="nova-reserva.html?espacoId=${espaco.id}" class="btn btn-primary">Reservar</a>
+                        `;
+                        container.appendChild(div);
+                    });
+                } else {
+                    container.innerHTML = '<p class="erro-msg">Nenhum espaço encontrado no sistema.</p>';
+                }
+
+            } catch (error) {
+                console.error("Erro ao carregar dashboard:", error);
+                container.innerHTML = '<p class="erro-msg">Erro ao carregar espaços. Tente novamente mais tarde.</p>';
+            }
+        }
+
+        renderEspacos();
+    </script>
+</body>
+</html>

@@ -4,6 +4,7 @@ class EspacoController {
 
   async buscarEspacos(req, res) {
       const espacos = await espacoService.buscarTodos();
+      console.log("ESPACOS NO CONTROLLER", espacos);
       return res.json({ espacos });
   }
 
