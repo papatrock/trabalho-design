@@ -16,12 +16,17 @@ class Reserva {
     }
 
     async criar(client, dados) {
-        /*
-           const sql = `INSERT INTO reservas (cliente, espaco_id, data, valor)
-                        VALUES ($1, $2, $3, $4) RETURNING *`;
-        */
-        console.log(`inserindo reserva para ${dados.cliente}`);
-        return { id: 123, ...dados, status: 'CONFIRMADA' };
+
+        let clienteId = 1; // TODO implementar logica de clientes
+
+        const sql = `
+            INSERT INTO reservas (cliente_id, espaco_id, data_reserva, valor_total, status)
+            VALUES ($1, $2, $3, 1000.00, 'CONFIRMADA')
+            RETURNING id, data_reserva, status
+        `;
+
+        const result = await client.query(sql, [clienteId, dados.espacoId, dados.data]);
+        return result.rows[0];
     }
 
     async buscarTodos(pool) {

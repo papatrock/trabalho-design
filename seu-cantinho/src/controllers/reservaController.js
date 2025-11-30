@@ -7,7 +7,7 @@ class ReservaController {
         try {
             const dadosReserva = req.body;
 
-            const novaReserva = await reservaService.processarNovaReserva(dadosReserva);
+            const novaReserva = await reservaService.criarReserva(dadosReserva);
 
             return res.status(201).json({
                 success: true,
@@ -33,6 +33,7 @@ class ReservaController {
     }
 
     async buscarReservaPorId(requisicao, resposta){
+        console.log("AAAAAAAAAAAAAAAA", requisicao.params);
         const {id} = requisicao.params;
 
         const reserva = await reservaService.buscarPorId(id);
@@ -45,6 +46,7 @@ class ReservaController {
     }
 
     async atualizarReserva(requisicao, resposta) {
+        console.log("COISOS DA REQUISISCAO:", requisicao.body, requisicao.params);
         try {
             const { id } = requisicao.params;
             const dados = requisicao.body;
@@ -65,12 +67,12 @@ class ReservaController {
 
     async deletarReserva(requisicao, resposta) {
         try {
-            const { id } = req.params;
-            await reservaService.cancelarReserva(id);
-            return res.json({ success: true, message: `Reserva ${id} foi excluída com sucesso.` });
+            const { id } = requisicao.params;
+            await reservaService.deletarReserva(id);
+            return resposta.json({ success: true, message: `Reserva ${id} foi excluída com sucesso.` });
         } catch (error) {
-            if (error.message === 'RESERVA_NAO_ENCONTRADA') return res.status(404).json({ error: "Reserva não encontrada." });
-            return res.status(500).json({ error: "Erro ao excluir." });
+            if (error.message === 'RESERVA_NAO_ENCONTRADA') return resposta.status(404).json({ error: "Reserva não encontrada." });
+            return resposta.status(500).json({ error: "Erro ao excluir." });
         }
     }
 }
