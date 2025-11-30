@@ -2,46 +2,64 @@ const espacoService = require('../services/EspacoService');
 
 class EspacoController {
 
-    async criarEspaco(req, res) {
-        try {
-            return res.status(501).json({ message: "wip" });
-        } catch (error) {
-            return res.status(500).json({ error: "Erro interno" });
-        }
-    }
+  async buscarEspacos(req, res) {
+      const espacos = await espacoService.buscarTodos();
+      return res.json({ espacos });
+  }
 
-    async listarEspacos(req, res) {
-        try {
-            // Dica: Implementar filtros por filial aqui (req.query.filialId)
-            return res.status(501).json({ message: "wip" });
-        } catch (error) {
-            return res.status(500).json({ error: "Erro interno" });
-        }
-    }
+  async buscarEspacoPorId(req, res) {
+      try {
+        return res.status(501).json({ message: "wip" });
+      } catch (error) {
+        return res.status(500).json({ error: "Erro interno" });
+      }
+  }
 
-    async buscarEspacoPorId(req, res) {
-        try {
-            return res.status(501).json({ message: "wip" });
-        } catch (error) {
-            return res.status(500).json({ error: "Erro interno" });
-        }
-    }
+  async criarEspaco(req, res) {
+      try {
+          const dadosEspaco = req.body;
 
-    async atualizarEspaco(req, res) {
-        try {
-            return res.status(501).json({ message: "wip" });
-        } catch (error) {
-            return res.status(500).json({ error: "Erro interno" });
-        }
-    }
+          const novoEspaco = await espacoService.criarEspaco(dadosEspaco);
 
-    async deletarEspaco(req, res) {
-        try {
-            return res.status(501).json({ message: "wip" });
-        } catch (error) {
-            return res.status(500).json({ error: "Erro interno" });
-        }
+          return res.status(201).json({
+              success: true,
+              message: "Espaço criado com sucesso!",
+              data: novoEspaco
+          });
+
+      } catch (error) {
+          return res.status(500).json({ error: "Erro interno" });
+      }
+  }
+
+  async atualizarEspaco(req, res) {
+    try {
+      const { id } = req.params;
+      const dados = req.body;
+
+      const espacoAtualizado = await espacoService.atualizarEspaco(id, dados);
+
+      return res.json({
+        success: true,
+        message: "Atualizado com sucesso.",
+        data: espacoAtualizado
+      });
+
+    } catch (error) {
+        return res.status(500).json({ error: "Erro interno" });
     }
+  }
+
+  async deletarEspaco(req, res) {
+    try {
+      const { id } = req.params;
+
+      await espacoService.deletarEspaco(id);
+      return res.json({ success: true, message: "Espaço deletado com sucesso." });
+    } catch (error) {
+        return res.status(500).json({ error: "Erro interno" });
+    }
+}
 }
 
 module.exports = new EspacoController();

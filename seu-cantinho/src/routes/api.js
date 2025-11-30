@@ -219,7 +219,7 @@ router.delete('/usuarios/:id', usuarioController.deletarUsuario);
  *         description: Não implementado
  */
 router.post('/espacos', espacoController.criarEspaco);
-router.get('/espacos', espacoController.listarEspacos);
+router.get('/espacos', espacoController.buscarEspacos);
 
 /**
  * @swagger
@@ -318,5 +318,47 @@ router.post('/pagamentos', pagamentoController.processarPagamento);
  */
 router.get('/pagamentos/:id', pagamentoController.buscarPagamentoPorId);
 router.delete('/pagamentos/:id', pagamentoController.estornarPagamento);
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Auth
+ *     description: Autenticação
+ *   - name: Reservas
+ *     description: Gerenciamento de reservas
+ *   - name: Usuarios
+ *     description: Gestão de clientes e administradores
+ */
+
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: Realiza login no sistema
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - senha
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 default: admin@admin.com
+ *               senha:
+ *                 type: string
+ *                 default: admin
+ *     responses:
+ *       '200':
+ *         description: Login realizado
+ *       '401':
+ *         description: Credenciais inválidas
+ */
+router.post('/login', usuarioController.login);
 
 module.exports = router;

@@ -48,12 +48,15 @@ class ReservaController {
     async atualizarReserva(requisicao, resposta) {
         console.log("COISOS DA REQUISISCAO:", requisicao.body, requisicao.params);
         try {
-            const { id } = requisicao.params;
-            const dados = requisicao.body;
+          const { id } = requisicao.params;
+          const dados = requisicao.body;
 
-            const reservaAtualizada = await reservaService.atualizarReserva(id, dados);
+          const reservaAtualizada = await reservaService.atualizarReserva(id, dados);
 
-            return resposta.json({ success: true, message: "Atualizado com sucesso.", data: reservaAtualizada });
+          return resposta.json({
+              success: true,
+              message: "Atualizado com sucesso.", data: reservaAtualizada
+          });
 
         } catch (error) {
             console.error("Erro update:", error);

@@ -17,16 +17,18 @@ CREATE TABLE IF NOT EXISTS espacos (
     disponivel BOOLEAN DEFAULT TRUE
 );
 
-CREATE TABLE IF NOT EXISTS clientes (
+CREATE TABLE IF NOT EXISTS usuarios (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    cpf VARCHAR(14) UNIQUE NOT NULL
+    cpf VARCHAR(14) UNIQUE NOT NULL,
+    senha VARCHAR(100) NOT NULL,
+    role VARCHAR(20) DEFAULT 'CLIENTE' -- 'ADMIN' ou 'CLIENTE'
 );
 
 CREATE TABLE IF NOT EXISTS reservas (
     id SERIAL PRIMARY KEY,
-    cliente_id INTEGER REFERENCES clientes(id),
+    cliente_id INTEGER REFERENCES usuarios(id),
     espaco_id INTEGER REFERENCES espacos(id),
     data_reserva DATE NOT NULL,
     valor_total DECIMAL(10, 2) NOT NULL,
@@ -56,12 +58,13 @@ INSERT INTO espacos (filial_id, nome, capacidade, preco_base, descricao) VALUES
 (2, 'Parque De Eventos Quielse Crisóstomo da Silva', 100, 300.00, 'Maior quadra coberta da america latina'),
 (3, 'Chácara', 300, 2000.00, 'Chácara');
 
-INSERT INTO clientes (nome, email, cpf) VALUES
-('Tobias da Silva', 'saibot@gmail.com', '111.111.111-11'),
-('João Gabriel B', 'joaoDoC++@gmail.com', '222.222.222-22');
+INSERT INTO usuarios (nome, email, cpf, senha, role) VALUES
+('Admin', 'admin@admin.com', '000.000.000-00', 'admin', 'ADMIN'),
+('Tobias da Silva', 'saibot@gmail.com', '111.111.111-11', '123', 'CLIENTE')
+('João Gabriel B', 'joaoDoC++@gmail.com', '222.222.222-22', '123', 'CLIENTE');
 
 INSERT INTO reservas (cliente_id, espaco_id, data_reserva, valor_total, status) VALUES
-(1, 1, '2023-12-25', 1500.00, 'CONFIRMADA');
+(2, 1, '2023-12-25', 1500.00, 'CONFIRMADA');
 
 INSERT INTO pagamentos (reserva_id, valor, metodo) VALUES
 (1, 1500.00, 'DINHEIRO');
