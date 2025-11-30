@@ -11,7 +11,7 @@ const reservaController = require('../controllers/reservaController');
 */
 
 /**
- * @Swagger
+ * @swagger
  * /reservas:
  *   get:
  *     summary: Lista todas as reservas
