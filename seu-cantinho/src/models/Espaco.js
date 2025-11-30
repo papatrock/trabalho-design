@@ -29,7 +29,6 @@ class Espaco {
             VALUES ($1, $2, $3, $4, $5)
             RETURNING *
         `;
-        console.log("DADOS NO MODEL", dados);
         const result = await client.query(sql, [
             dados.nome,
             dados.filialId,

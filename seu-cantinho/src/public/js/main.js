@@ -11,8 +11,6 @@ async function carregarEspacos() {
         const response = await fetch('/api/espacos');
         const resultado = await response.json();
 
-        console.log("ESPACOOOOOSSSS", resultado);
-
         const select = document.getElementById('espacoId');
 
         const listaDeEspacos = resultado.espacos || resultado.data || [];

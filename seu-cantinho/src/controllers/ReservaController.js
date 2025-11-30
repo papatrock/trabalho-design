@@ -9,8 +9,6 @@ class ReservaController {
 
             const novaReserva = await reservaService.criarReserva(dadosReserva);
 
-            console.log("[ReservaController] Criando reserva com dados:", dadosReserva);
-
             return res.status(201).json({
                 success: true,
                 message: "Reserva criada com sucesso!",
@@ -35,7 +33,6 @@ class ReservaController {
     }
 
     async buscarReservaPorId(requisicao, resposta){
-        console.log("AAAAAAAAAAAAAAAA", requisicao.params);
         const {id} = requisicao.params;
 
         const reserva = await reservaService.buscarPorId(id);
@@ -48,7 +45,6 @@ class ReservaController {
     }
 
     async atualizarReserva(requisicao, resposta) {
-        console.log("COISOS DA REQUISISCAO:", requisicao.body, requisicao.params);
         try {
           const { id } = requisicao.params;
           const dados = requisicao.body;
@@ -84,7 +80,6 @@ class ReservaController {
     async buscarReservasPorUsuario(req, res) {
         try {
             const { usuarioId } = req.query;
-            console.log("USUARIO ID:", usuarioId);
 
             if (!usuarioId) {
                 return res.status(400).json({ error: "Parâmetro usuarioId é obrigatório." });

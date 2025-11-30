@@ -9,10 +9,6 @@ class Reserva {
         `;
         const result = await client.query(sql, [espacoId, data]);
         return result.rows.length === 0;
-
-        // Mockando retorno para o exemplo funcionar sem criar tabelas agora
-        //console.log(`verificando disponibilidade (LOCK) para Espaço ${espacoId} na data ${data}`);
-        //return true;
     }
 
     async criar(client, dados) {

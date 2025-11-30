@@ -4,7 +4,6 @@ const Espaco = require('../models/Espaco');
 class EspacoService {
     async criarEspaco(dados) {
         const client = await db.getClient();
-        console.log("CLIENTE NO SERVICE", client);
         try {
             // TODO validar se a filial existe aqui
             const novo = await Espaco.criar(client, dados);
